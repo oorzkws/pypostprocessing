@@ -1,0 +1,24 @@
+name: Exit Code Demo
+
+on: workflow_dispatch
+
+jobs:
+  check-exit-code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Datestamp
+        run: ./datestamp.py
+      - name: Check for changes
+        id: run_command
+        run: git diff --quiet && git diff --cached --quiet
+        continue-on-error: true   # <- allow the workflow to continue even if non-zero
+
+      - name: Diff empty
+        if: ${{ steps.run_command.conclusion == 'success' }}
+        run: echo "exit code 0"
+
+      - name: Diff not empty
+        if: ${{ steps.run_command.conclusion == 'failure' }}
+        run: echo "exit code 1"
