@@ -43,8 +43,7 @@ def set_changelog_date():
 def get_info_name() -> str:
     with open(INFO_PATH, 'r', encoding='utf-8', newline='') as info:
         parsed_info = json.load(info)
-        version_str = parsed_info.get('name')
-        return str_as_version(version_str) 
+        return parsed_info.get('name')
 
 def get_info_version() -> tuple[int]:
     content = read_file_content(INFO_PATH)
