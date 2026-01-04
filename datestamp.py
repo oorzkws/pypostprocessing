@@ -18,7 +18,7 @@ def str_as_version(version: str) -> tuple[int]:
 def get_changelog_version() -> tuple[int]:
     version_regex = re.compile(r'Version: (?P<version>.*)$')
     with open(CHANGELOG_PATH, 'r', encoding='utf-8') as changelog:
-        version_line = version_regex.search(changelog.read())
+        version_line = version_regex.match(changelog.read())
         version_str = version_line.group('version')
         return str_as_version(version_str)
     
