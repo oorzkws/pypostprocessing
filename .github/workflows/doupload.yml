@@ -14,7 +14,7 @@ jobs:
         id: run_command
         run: |
           git diff --quiet && git diff --cached --quiet
-          echo "EXIT_CODE=$?" >> "$GITHUB_ENV"
+          echo "HAS_CHANGES=$?" >> "$GITHUB_OUTPUT"
         continue-on-error: true # nonzero output is an option here, not a terminating error
       - name: unquiet check
         run: git status --porcelain
