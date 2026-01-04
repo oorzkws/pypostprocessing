@@ -8,14 +8,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: pwd
-        run: ls
       - name: Datestamp
         run: python ./datestamp.py
       - name: Check for changes
         id: run_command
-        run: git diff --quiet && git diff --cached --quiet
-        continue-on-error: true   # <- allow the workflow to continue even if non-zero
+        run: |
+          git diff --quiet && git diff --cached --quiet
+          echo "EXIT_CODE=$?" >> "$GITHUB_ENV"
+        continue-on-error: true # nonzero output is an option here, not a terminating error
       - name: unquiet check
         run: git status --porcelain
       - name: Diff empty
