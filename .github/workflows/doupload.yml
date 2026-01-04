@@ -16,7 +16,8 @@ jobs:
         id: run_command
         run: git diff --quiet && git diff --cached --quiet
         continue-on-error: true   # <- allow the workflow to continue even if non-zero
-
+      - name: unquiet check
+        run: git status --porcelain
       - name: Diff empty
         if: ${{ steps.run_command.conclusion == 'success' }}
         run: echo "exit code 0"

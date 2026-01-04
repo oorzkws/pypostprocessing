@@ -71,8 +71,8 @@ def set_version_and_date():
     # Commit will be done in yml so we store the name and version in the env file and exit
     env_path = os.getenv('GITHUB_ENV')
     with open(env_path, 'a') as env_file:
-        env_file.write(f"MOD_NAME={get_info_name()}")
-        env_file.write(f"MOD_VERSION={mod_version}")
+        env_file.write(f"MOD_NAME={get_info_name()}\n")
+        env_file.write(f"MOD_VERSION={mod_version}\n")
         env_file.write(f"MOD_ZIP_PATH={get_info_name()}_{mod_version}.zip")
     
 set_version_and_date()
