@@ -16,20 +16,20 @@ def str_as_version(version: str) -> tuple[int]:
     return tuple(int_map)
 
 def get_changelog_version() -> tuple[int]:
-    version_regex = re.compile(r'Version: (?P<version>).*$')
+    version_regex = re.compile(r'Version: (?P<version>.*)$')
     with open(CHANGELOG_PATH, 'r', encoding='utf-8') as changelog:
         version_line = version_regex.search(changelog.read())
         version_str = version_line.group('version')
         return str_as_version(version_str)
     
 def set_changelog_version(new_version):
-    version_regex = re.compile(r'Version: (?P<version>).*$')
+    version_regex = re.compile(r'Version: (?P<version>.*)$')
     with open(CHANGELOG_PATH, 'r+', encoding='utf-8', newline='') as changelog:
         result = version_regex.sub(f'Version: {new_version}', changelog.read(), count=1)
         changelog.write(result)
     
 def set_changelog_date():
-    date_regex = re.compile(r'Date: (?P<date>).*$')
+    date_regex = re.compile(r'Date: (?P<date>.*)$')
     cur_date = date.today().isoformat() # YYYY-MM-DD
     with open(CHANGELOG_PATH, 'r+', encoding='utf-8', newline='') as changelog:
         result = date_regex.sub(f'Date: {cur_date}', changelog.read(), count=1)
