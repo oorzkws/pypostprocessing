@@ -19,9 +19,9 @@ jobs:
       - name: unquiet check
         run: git status --porcelain
       - name: Diff empty
-        if: ${{ steps.run_command.conclusion == 'success' }}
-        run: echo "exit code 0, conclusion ${{ steps.run_command.conclusion }}"
+        if: ${{ steps.run_command.outputs.exit_code == '0' }}
+        run: echo "exit code 0, conclusion ${{ steps.run_command.conclusion }}, code ${{steps.run_command.outputs.exit_code}}"
 
       - name: Diff not empty
-        if: ${{ steps.run_command.conclusion == 'failure' }}
-        run: echo "exit code 1, conclusion ${{ steps.run_command.conclusion }}"
+        if: ${{ steps.run_command.outputs.exit_code != '0' }}
+        run: echo "exit code non-0, conclusion ${{ steps.run_command.conclusion }}, code ${{steps.run_command.outputs.exit_code}}"
