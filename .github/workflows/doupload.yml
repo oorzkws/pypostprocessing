@@ -24,11 +24,10 @@ jobs:
           echo "HAS_CHANGES=$?" >> "$GITHUB_OUTPUT"
         continue-on-error: true # nonzero output is an option here, not a terminating error
       # Nothing to do
-      - name: Note empty diff
-        if: ${{ steps.run_command.outputs.HAS_CHANGES == '0' }}
+      - name: Note diff status
         run: echo "exit code 0, code ${{ steps.run_command.outputs.HAS_CHANGES }}"
       # Commit changelog/json
-      - name: Git tag & push
+      - name: Tag & push
         if: ${{ steps.run_command.outputs.HAS_CHANGES != '0' }}
         run: |
           echo "exit code non-0, code ${{ steps.run_command.outputs.HAS_CHANGES }}"
