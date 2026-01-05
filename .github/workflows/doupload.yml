@@ -52,7 +52,7 @@ jobs:
         with:
             mod-name: ${{ env.MOD_NAME }}
         env: 
-          FACTORIO_UPLOAD_TOKEN: ${{ secrets.FACTORIO_UPLOAD_TOKEN }}
+          FACTORIO_MODS_TOKEN: ${{ secrets.FACTORIO_UPLOAD_TOKEN }}
           FILENAME: "./${{ env.MOD_ZIP_PATH }}"
 
 
