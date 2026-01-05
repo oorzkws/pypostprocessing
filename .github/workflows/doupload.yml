@@ -8,7 +8,7 @@ permissions:
 jobs:
   portal-upload:
     name: "Upload to mod portal"
-    uses: pyanodon/pyanodontests/.github/workflows/portal-upload.yml@v1
+    uses: pyanodon/pyanodontests/.github/workflows/portal-upload.yml@main
     secrets: inherit
 
 
