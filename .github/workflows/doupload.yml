@@ -1,4 +1,4 @@
-name: Exit Code Demo
+name: Mod Portal Upload
 
 on: workflow_dispatch
 
@@ -6,14 +6,9 @@ permissions:
   contents: write
 
 jobs:
-  datestamp:
-    name: "Datestamp & version"
+  portal-upload:
+    name: "Upload to mod portal"
     runs-on: ubuntu-latest
-    outputs:
-      has_changes: ${{ steps.run_command.outputs.HAS_CHANGES }} # '0' or non-zero
-      mod_name: ${{ env.MOD_NAME }} # not always the same as the repo!
-      mod_version: ${{ env.MOD_VERSION }}
-      mod_zip_path: ${{ env.MOD_ZIP_PATH }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -29,11 +24,11 @@ jobs:
           echo "HAS_CHANGES=$?" >> "$GITHUB_OUTPUT"
         continue-on-error: true # nonzero output is an option here, not a terminating error
       # Nothing to do
-      - name: Diff empty
+      - name: Note empty diff
         if: ${{ steps.run_command.outputs.HAS_CHANGES == '0' }}
         run: echo "exit code 0, code ${{ steps.run_command.outputs.HAS_CHANGES }}"
       # Commit changelog/json
-      - name: Diff not empty
+      - name: Git tag & push
         if: ${{ steps.run_command.outputs.HAS_CHANGES != '0' }}
         run: |
           echo "exit code non-0, code ${{ steps.run_command.outputs.HAS_CHANGES }}"
@@ -42,5 +37,25 @@ jobs:
           git add .
           git commit -m "Release version ${{ env.MOD_VERSION }}"
           git tag v${{ env.MOD_VERSION }}
-          git push origin v${{ env.MOD_VERSION }} --dry-run
+          git push origin v${{ env.MOD_VERSION }}
+      - name: Zip mod folder
+        if: ${{ steps.run_command.outputs.HAS_CHANGES != '0' }}
+        run: git archive --prefix "${{ env.MOD_NAME }}/" -o "./${{ env.MOD_ZIP_PATH }}" "v${{ env.MOD_VERSION }}"
+      - name: Upload artifact
+        if: ${{ steps.run_command.outputs.HAS_CHANGES != '0' }}
+        uses: actions/upload-artifact@v6
+        with:
+            name: ${{ env.MOD_ZIP_PATH }}
+            path: ${{ env.MOD_ZIP_PATH }}
+      - name: Upload to portal
+        if: ${{ steps.run_command.outputs.HAS_CHANGES != '0' }}
+        uses: mchangrh/factorio-mod-upload@v2
+        with:
+            mod-name: ${{ env.MOD_NAME }}
+        env: 
+          FACTORIO_UPLOAD_TOKEN: ${{ secrets.FACTORIO_UPLOAD_TOKEN }}
+          FILENAME: "./${{ env.MOD_ZIP_PATH }}"
+
+
+
 
